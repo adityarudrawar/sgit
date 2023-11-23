@@ -1,32 +1,33 @@
 import utils
 import hashing
+from repository import Repository
 
 if __name__ == '__main__':
     print("SGIT STARTED")
 
-    commands = ["sgit hash-object README.md", "sgit add-to-index README.md"]
+    repository = Repository()
+
+    commands = ["sgit init", "sgit commit"]
     for command_input in commands:
-        print("WAITING FOR YOUR COMMAND")
 
         command_and_args = command_input.split(" ")
         command = command_and_args[1]
         args = command_and_args[2:]
 
         if command == 'init':
-            utils.init_sgit()
+            repository.init()
+        elif command == 'commit':
+            repository.commit()
         elif command == 'hash-object':
             sha1_hash, content = hashing.hash_object(args[0])
             utils.store_object(sha1_hash, content)
         elif command == 'add-to-index':
-            pass
-        elif command == 'store-to-db':
-            pass
-        elif command == 'add':
-            pass
+            repository.add_to_index(args[0])
+        elif command == 'create-tree':
+            repository.create_tree_from_index()
         elif command == 'create-tree':
             pass
         elif command == '':
             pass
         elif command == 'unhash-object':
             pass
-        break
