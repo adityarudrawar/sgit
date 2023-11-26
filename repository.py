@@ -7,6 +7,7 @@ from entry import Entry
 from tree import Tree
 from author import Author
 from commit import Commit
+from refs import Refs
 import time
 
 HEADER_SPLIT_CHAR = b'|@|'
@@ -49,6 +50,7 @@ class Repository:
     def commit(self):
         workspace = Workspace(CWD)
         database = Database(self.OBJECTS_PATH)
+        refs = Refs(self.HEAD_PATH)
 
         entries = []
 
@@ -65,17 +67,19 @@ class Repository:
 
         name = "Aditya Arun Rudrawar"
         email = "adirudrawar@gmail.com"
+        parent = refs.read_head()
         author = Author(name, email, time.time())
 
         message = input("Commit message: ")
 
-        commit = Commit(tree.hash, author, message)
+        commit = Commit(parent, tree.hash, author, message)
         database.store(commit)
 
-        with open(self.HEAD_PATH, "w") as file:
-            file.write(commit.hash)
+        refs.update_head(commit.hash)
 
-        print("[(root-commit) ", commit.hash, "]", " ", message)
+        is_root = "(root-commit)" if commit.parent == None else ""
+
+        print(f"[{is_root}", commit.hash, "]", " ", message)
 
     def __new__(cls):
         if cls._instance is None:

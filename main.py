@@ -1,5 +1,3 @@
-import utils
-import hashing
 from repository import Repository
 
 if __name__ == '__main__':
@@ -18,16 +16,5 @@ if __name__ == '__main__':
             repository.init()
         elif command == 'commit':
             repository.commit()
-        elif command == 'hash-object':
-            sha1_hash, content = hashing.hash_object(args[0])
-            utils.store_object(sha1_hash, content)
-        elif command == 'add-to-index':
-            repository.add_to_index(args[0])
-        elif command == 'create-tree':
-            repository.create_tree_from_index()
-        elif command == 'create-tree':
-            pass
-        elif command == '':
-            pass
-        elif command == 'unhash-object':
-            pass
+        else:
+            print("Not a valid command")
